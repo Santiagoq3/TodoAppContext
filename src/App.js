@@ -1,24 +1,36 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
+import { ThemeContext } from './components/context/createContext';
+import { Main } from "./components/Main";
 
 function App() {
+  
+  const [productos, setproductos] = useState(JSON.parse(localStorage.getItem("productos")) || [])
+
+  const handleAddTarea = (tarea)=>{
+
+    setproductos( [...productos, tarea])
+   
+  }
+
+  useEffect(()=>{
+    localStorage.setItem("productos", JSON.stringify(productos))
+  }, [productos])
+
+  const handleDeleteTarea = (id)=>{
+    setproductos( productos.filter(producto=> producto.id !== id))
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeContext.Provider value={{
+      productos,
+      setproductos,
+      handleAddTarea,
+      handleDeleteTarea
+    }}>
+      <Main />
+    </ThemeContext.Provider>
   );
 }
 
